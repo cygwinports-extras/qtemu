@@ -1,0 +1,14 @@
+inherit qt4-cmake
+
+
+HOMEPAGE="http://qtemu.org/"
+SRC_URI="mirror://sourceforge/qtemu/${P}.tar.bz2"
+PATCH_URI="1.0.5-pkgdatadir.patch"
+
+src_install() {
+	cd ${B}
+	cyginstall
+
+	doicon ${S}/images/crystal/qtemu.png
+	make_desktop_entry qtemu QtEmu qtemu "System;Emulator;Qt"
+}

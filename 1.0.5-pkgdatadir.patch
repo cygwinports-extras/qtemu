@@ -1,0 +1,63 @@
+--- origsrc/qtemu-1.0.5/CMakeLists.txt	2007-11-12 13:31:00.000000000 -0600
++++ src/qtemu-1.0.5/CMakeLists.txt	2012-06-03 22:02:33.256100600 -0500
+@@ -46,9 +46,11 @@ SET(qtemu_MOC_HDRS
+     mainwindow.h
+ )
+ 
++IF(MINGW)
+ SET(qtemu_RCS
+     qtemu.rc
+ )
++ENDIF(MINGW)
+ 
+ SET(qtemu_RESOUCES
+     qtemu.qrc
+@@ -114,7 +116,7 @@ ADD_CUSTOM_TARGET(translations ALL
+                    DEPENDS ${QM_FILES})
+ 
+ INSTALL (FILES ${QM_FILES}
+-         DESTINATION translations)
++         DESTINATION share/qtemu/translations)
+ # translation end
+ 
+ SET(QT_USE_QTXML)
+@@ -146,13 +148,13 @@ TARGET_LINK_LIBRARIES(qtemu
+ )
+ 
+ FILE(GLOB helpfiles "${CMAKE_CURRENT_SOURCE_DIR}/help/*.png")
+-INSTALL(FILES ${helpfiles} DESTINATION help)
++INSTALL(FILES ${helpfiles} DESTINATION share/qtemu/help)
+ 
+-INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/help/main.htm DESTINATION help)
++INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/help/main.htm DESTINATION share/qtemu/help)
+ 
+ FILE(GLOB helpfiles_de "${CMAKE_CURRENT_SOURCE_DIR}/help/de/*.png")
+-INSTALL(FILES ${helpfiles_de} DESTINATION help/de)
++INSTALL(FILES ${helpfiles_de} DESTINATION share/qtemu/help/de)
+ 
+-INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/help/de/main.htm DESTINATION help/de)
++INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/help/de/main.htm DESTINATION share/qtemu/help/de)
+ 
+ INSTALL(TARGETS qtemu DESTINATION bin)
+--- origsrc/qtemu-1.0.5/helpwindow.cpp	2007-11-12 13:31:00.000000000 -0600
++++ src/qtemu-1.0.5/helpwindow.cpp	2012-06-03 22:03:44.644183800 -0500
+@@ -80,7 +80,7 @@ QUrl HelpWindow::getHelpFile()
+             return testUrl;
+     
+         //check for case when qtemu executable is in bin/ (installed on linux)
+-        testUrl = QUrl(QCoreApplication::applicationDirPath()+"/../help/" + locale + "/main.htm");
++        testUrl = QUrl(QCoreApplication::applicationDirPath()+"/../share/qtemu/help/" + locale + "/main.htm");
+         if (QFile::exists(testUrl.toString()))
+             return testUrl;
+     }
+--- origsrc/qtemu-1.0.5/main.cpp	2007-11-12 13:31:00.000000000 -0600
++++ src/qtemu-1.0.5/main.cpp	2012-06-03 22:06:48.464697700 -0500
+@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
+         translator.load(path);
+     else
+     {
+-        path = QCoreApplication::applicationDirPath()+"/../translations/qtemu_" + locale + ".qm";
++        path = QCoreApplication::applicationDirPath()+"/../share/qtemu/translations/qtemu_" + locale + ".qm";
+         if (QFile::exists(path))
+             translator.load(path);
+     }
